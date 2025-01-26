@@ -9,6 +9,8 @@ const CustomCursor = () => {
   const [isVisible, setIsVisible] = useState(false)
   const [isTouchDevice, setIsTouchDevice] = useState(false)
   const [cursorSize, setCursorSize] = useState(16) // default size in pixels
+  const [isPulsating, setIsPulsating] = useState(false)
+  let cursorTimer: NodeJS.Timeout
 
   useEffect(() => {
     // Check if device is touch-enabled
@@ -16,6 +18,11 @@ const CustomCursor = () => {
 
     const updateCursorPosition = (e: MouseEvent) => {
       setPosition({ x: e.clientX, y: e.clientY })
+      setIsPulsating(false)
+      if (cursorTimer) clearTimeout(cursorTimer)
+      cursorTimer = setTimeout(() => {
+        setIsPulsating(true)
+      }, 2000)
     }
 
     const handleMouseOver = (e: MouseEvent) => {
@@ -55,6 +62,7 @@ const CustomCursor = () => {
       document.removeEventListener('mouseout', handleMouseOut)
       document.removeEventListener('mouseenter', handleMouseEnterWindow)
       document.removeEventListener('mouseleave', handleMouseLeaveWindow)
+      if (cursorTimer) clearTimeout(cursorTimer)
     }
   }, [])
 
@@ -65,7 +73,7 @@ const CustomCursor = () => {
     <motion.div
       className="fixed rounded-full pointer-events-none mix-blend-difference"
       animate={{
-        scale: isHovering ? 1 : 1,
+        scale: isPulsating ? [1, 1.5, 1] : (isHovering ? 1 : 1),
         opacity: isVisible ? 1 : 0,
         x: position.x - cursorSize / 2,
         y: position.y - cursorSize / 2,
@@ -76,10 +84,16 @@ const CustomCursor = () => {
         backgroundColor: 'pink',
       }}
       transition={{
-        type: "spring",
-        stiffness: 150,
-        damping: 15,
-        mass: 0.2
+        scale: isPulsating ? {
+          repeat: Infinity,
+          duration: 1.5,
+          ease: "easeInOut"
+        } : {
+          type: "spring",
+          stiffness: 150,
+          damping: 15,
+          mass: 0.2
+        }
       }}
     />
   )
