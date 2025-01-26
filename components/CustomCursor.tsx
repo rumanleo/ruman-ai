@@ -14,11 +14,19 @@ const CustomCursor = () => {
   let cursorTimer: NodeJS.Timeout
 
   useEffect(() => {
-    // Check if device is touch-enabled
+    // Check if device is touch-enabled and browser is Safari
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
     setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0)
 
     const updateCursorPosition = (e: MouseEvent) => {
-      setPosition({ x: e.clientX, y: e.clientY })
+      // Add small delay for Safari to ensure proper rendering
+      requestAnimationFrame(() => {
+        setPosition({ 
+          x: e.pageX || e.clientX, // Use pageX as fallback
+          y: e.pageY || e.clientY  // Use pageY as fallback
+        })
+      });
+      
       setIsPulsating(false)
       if (cursorTimer) clearTimeout(cursorTimer)
       cursorTimer = setTimeout(() => {
@@ -63,6 +71,9 @@ const CustomCursor = () => {
       setIsVisible(false)
     }
 
+    // Force cursor visibility on mount for Safari
+    setIsVisible(true)
+
     window.addEventListener('mousemove', updateCursorPosition)
     document.addEventListener('mouseover', handleMouseOver)
     document.addEventListener('mouseout', handleMouseOut)
@@ -84,7 +95,11 @@ const CustomCursor = () => {
 
   return (
     <motion.div
-      className="fixed rounded-full pointer-events-none mix-blend-difference"
+      className="fixed rounded-full pointer-events-none z-[9999] mix-blend-difference" // Increased z-index
+      style={{ 
+        willChange: 'transform', // Add GPU acceleration
+        WebkitTransform: 'translate3d(0,0,0)', // Force hardware acceleration
+      }}
       animate={{
         scale: isPulsating ? [1, 1.5, 1] : 1,
         opacity: isVisible ? 1 : 0,
@@ -94,6 +109,7 @@ const CustomCursor = () => {
         height: isTextHover ? 20 : cursorSize,
         borderRadius: isTextHover ? 0 : '9999px',
         backgroundColor: 'pink',
+        // boxShadow: '0 0 10px rgba(0, 0, 0, 0.3)',
       }}
       transition={{
         scale: isPulsating ? {
