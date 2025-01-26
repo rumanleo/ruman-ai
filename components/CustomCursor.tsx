@@ -8,7 +8,7 @@ const CustomCursor = () => {
   const [isHovering, setIsHovering] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
   const [isTouchDevice, setIsTouchDevice] = useState(false)
-  const [cursorSize, setCursorSize] = useState(24) // default size in pixels
+  const [cursorSize, setCursorSize] = useState(16) // default size in pixels
 
   useEffect(() => {
     // Check if device is touch-enabled
@@ -32,7 +32,7 @@ const CustomCursor = () => {
 
     const handleMouseOut = () => {
       setIsHovering(false)
-      setCursorSize(24) // reset to default size
+      setCursorSize(16) // reset to default size
     }
 
     const handleMouseEnterWindow = () => {
@@ -73,7 +73,7 @@ const CustomCursor = () => {
         height: cursorSize
       }}
       style={{
-        backgroundColor: 'white',
+        backgroundColor: 'pink',
       }}
       transition={{
         type: "spring",
