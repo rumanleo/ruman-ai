@@ -10,10 +10,11 @@ export default function Home() {
         <p className='text-zinc-900 text-xl font-medium antialiased'>
           Loves building delightful experiences
         </p>
-        <div className='flex gap-8'>
+
+        <div className='flex gap-8 select-none'>
           <a
             href='mailto:hello@ruman.ai'
-            className='border border-zinc-900 p-2 px-4 mt-4 text-lg font-normal text-black hover:bg-zinc-900 hover:text-white transition-colors inline-block cursor-pointer'>
+            className='border border-zinc-400 p-2 px-6 mt-4 text-lg font-medium text-black hover:bg-zinc-900 hover:text-white hover:border-zinc-900 transition-all inline-block cursor-pointer rounded-full'>
             Let's chat
           </a>
           <a
@@ -29,7 +30,6 @@ export default function Home() {
           scene="https://prod.spline.design/K5TkdnvskFHYG5TY/scene.splinecode"
         />
       </div>
-
     </main>
 
   );

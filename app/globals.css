@@ -21,3 +21,22 @@ body {
   background: var(--background);
   font-family: Satoshi, Helvetica, sans-serif;
 }
+
+* {
+  cursor: none !important;
+}
+
+/* Optional: Show default cursor for clickable elements */
+a, button {
+  cursor: none !important;
+}
+
+::selection {
+  background-color: #18181b; /* zinc-900 */
+  color: #fafafa; /* zinc-50 */
+}
+
+::-moz-selection {
+  background-color: #18181b;
+  color: #fafafa;
+}
