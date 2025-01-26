@@ -10,6 +10,7 @@ const CustomCursor = () => {
   const [isTouchDevice, setIsTouchDevice] = useState(false)
   const [cursorSize, setCursorSize] = useState(16) // default size in pixels
   const [isPulsating, setIsPulsating] = useState(false)
+  const [isTextHover, setIsTextHover] = useState(false)
   let cursorTimer: NodeJS.Timeout
 
   useEffect(() => {
@@ -30,16 +31,28 @@ const CustomCursor = () => {
       if (target.tagName.toLowerCase() === 'button' || 
           target.tagName.toLowerCase() === 'a') {
         setIsHovering(true)
-        setCursorSize(40) // larger size for interactive elements
+        setIsTextHover(false)
+        setCursorSize(40)
       } else if (target.classList.contains('mask-text')) {
         setIsHovering(true)
-        setCursorSize(80) // even larger for text masking
+        setCursorSize(80)
+        setIsTextHover(false)
+      } else if (target.tagName.toLowerCase() === 'p' || 
+                target.tagName.toLowerCase() === 'span' || 
+                target.tagName.toLowerCase() === 'h1' || 
+                target.tagName.toLowerCase() === 'h2' || 
+                target.tagName.toLowerCase() === 'h3' || 
+                target.tagName.toLowerCase() === 'h4') {
+        setIsTextHover(true)
+        setIsHovering(false)
+        setCursorSize(24) // Height of the vertical line
       }
     }
 
     const handleMouseOut = () => {
       setIsHovering(false)
-      setCursorSize(16) // reset to default size
+      setIsTextHover(false)
+      setCursorSize(16)
     }
 
     const handleMouseEnterWindow = () => {
@@ -73,14 +86,13 @@ const CustomCursor = () => {
     <motion.div
       className="fixed rounded-full pointer-events-none mix-blend-difference"
       animate={{
-        scale: isPulsating ? [1, 1.5, 1] : (isHovering ? 1 : 1),
+        scale: isPulsating ? [1, 1.5, 1] : 1,
         opacity: isVisible ? 1 : 0,
-        x: position.x - cursorSize / 2,
+        x: position.x - (isTextHover ? 1 : cursorSize / 2),
         y: position.y - cursorSize / 2,
-        width: cursorSize,
-        height: cursorSize
-      }}
-      style={{
+        width: isTextHover ? 2 : cursorSize,
+        height: isTextHover ? 20 : cursorSize,
+        borderRadius: isTextHover ? 0 : '9999px',
         backgroundColor: 'pink',
       }}
       transition={{
@@ -93,6 +105,16 @@ const CustomCursor = () => {
           stiffness: 150,
           damping: 15,
           mass: 0.2
+        },
+        width: {
+          type: "spring",
+          stiffness: 300,
+          damping: 25
+        },
+        height: {
+          type: "spring",
+          stiffness: 300,
+          damping: 25
         }
       }}
     />
