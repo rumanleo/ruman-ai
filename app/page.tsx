@@ -25,7 +25,7 @@ export default function Home() {
         </div>
 
       </div>
-      <div className='mt-32 w-full'>
+      <div className='w-full'>
         <Spline
           scene="https://prod.spline.design/K5TkdnvskFHYG5TY/scene.splinecode"
         />
