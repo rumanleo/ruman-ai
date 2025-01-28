@@ -23,9 +23,12 @@ export default function Home() {
             Linkedin
           </a>
         </div>
-
       </div>
-      <div className='w-full'>
+
+      <div className='fixed bottom-4 right-0 w-40 h-10 bg-[#e3e3e3] hidden sm:block'>
+      </div>
+      
+      <div className='mt-16 sm:mt-0 w-full'>
         <Spline
           scene="https://prod.spline.design/K5TkdnvskFHYG5TY/scene.splinecode"
         />
