@@ -19,13 +19,11 @@ const CustomCursor = () => {
     setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0)
 
     const updateCursorPosition = (e: MouseEvent) => {
-      // Add small delay for Safari to ensure proper rendering
-      requestAnimationFrame(() => {
-        setPosition({ 
-          x: e.pageX || e.clientX, // Use pageX as fallback
-          y: e.pageY || e.clientY  // Use pageY as fallback
-        })
-      });
+      // Remove requestAnimationFrame delay and update position directly
+      setPosition({ 
+        x: e.clientX, // Use clientX for better performance
+        y: e.clientY  // Use clientY for better performance
+      })
       
       setIsPulsating(false)
       if (cursorTimer) clearTimeout(cursorTimer)
@@ -95,10 +93,10 @@ const CustomCursor = () => {
 
   return (
     <motion.div
-      className="fixed rounded-full pointer-events-none z-[9999] mix-blend-difference" // Increased z-index
+      className="fixed rounded-full pointer-events-none z-[9999] mix-blend-difference"
       style={{ 
-        willChange: 'transform', // Add GPU acceleration
-        WebkitTransform: 'translate3d(0,0,0)', // Force hardware acceleration
+        willChange: 'transform',
+        WebkitTransform: 'translate3d(0,0,0)',
       }}
       animate={{
         scale: isPulsating ? [1, 1.5, 1] : 1,
@@ -112,24 +110,25 @@ const CustomCursor = () => {
         // boxShadow: '0 0 10px rgba(0, 0, 0, 0.3)',
       }}
       transition={{
+        default: { // Add default transition for all properties
+          type: "spring",
+          stiffness: 400, // Increased from 150
+          damping: 10,   // Increased from 15
+          mass: 0.1      // Decreased from 0.2
+        },
         scale: isPulsating ? {
           repeat: Infinity,
           duration: 1.5,
           ease: "easeInOut"
-        } : {
-          type: "spring",
-          stiffness: 150,
-          damping: 15,
-          mass: 0.2
-        },
+        } : undefined,
         width: {
           type: "spring",
-          stiffness: 300,
+          stiffness: 400, // Increased from 300
           damping: 25
         },
         height: {
           type: "spring",
-          stiffness: 300,
+          stiffness: 400, // Increased from 300
           damping: 25
         }
       }}

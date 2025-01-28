@@ -20,15 +20,45 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: Satoshi, Helvetica, sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+/* Hide default cursor */
 * {
   cursor: none !important;
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* Optional: Show default cursor for clickable elements */
-a, button {
+/* Ensure cursor is hidden on interactive elements */
+a, button, input, textarea, select {
   cursor: none !important;
+  outline: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Show default cursor for touch devices */
+@media (hover: none) and (pointer: coarse) {
+  * {
+    cursor: auto !important;
+  }
+  
+  a, button, input, textarea, select {
+    cursor: auto !important;
+  }
+}
+
+/* Ensure Safari mobile doesn't show tap highlight */
+@supports (-webkit-touch-callout: none) {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
 }
 
 ::selection {
